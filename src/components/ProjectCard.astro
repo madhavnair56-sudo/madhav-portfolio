@@ -1,0 +1,54 @@
+---
+import { withBase } from '../lib/paths';
+
+interface Props {
+  id: string;
+  title: string;
+  eyebrow: string;
+  summary: string;
+  tags: string[];
+  accent?: string;
+  draft?: boolean;
+}
+const { id, title, eyebrow, summary, tags, accent = '#DCD8CE', draft = false } = Astro.props;
+---
+<article class="project-card">
+  <a href={withBase(`/work/${id}/`)} aria-label={`View case study: ${title}`}>
+    <div class="cover" style={`--card-accent:${accent}`} aria-hidden="true">
+      <span>{eyebrow}</span>
+      <span class="mark">↗</span>
+    </div>
+    <div class="card-copy">
+      <div class="title-line">
+        <h3>{title}</h3>
+        {draft && <span class="draft">Draft</span>}
+      </div>
+      <p>{summary}</p>
+      <ul aria-label="Skills demonstrated">
+        {tags.slice(0, 4).map(tag => <li>{tag}</li>)}
+      </ul>
+    </div>
+  </a>
+</article>
+<style>
+  .project-card { border-top: 1px solid var(--line); padding-top: 1.25rem; }
+  a { display: block; text-decoration: none; }
+  .cover {
+    aspect-ratio: 16 / 10;
+    padding: 1.5rem;
+    background: var(--card-accent);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+  .cover span { font-size: .78rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+  .mark { font-size: 1.25rem !important; }
+  .card-copy { padding: 1.2rem 0 2rem; }
+  .title-line { display: flex; align-items: baseline; gap: .75rem; }
+  h3 { margin: 0; font-size: clamp(1.6rem, 3vw, 2.6rem); font-weight: 500; line-height: 1.05; letter-spacing: -.035em; }
+  p { max-width: 620px; margin: .8rem 0 1rem; color: var(--muted); }
+  ul { list-style: none; display: flex; flex-wrap: wrap; gap: .5rem 1rem; padding: 0; margin: 0; color: var(--muted); font-size: .82rem; }
+  .draft { padding: .2rem .45rem; border: 1px solid var(--line); color: var(--muted); font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; }
+  a:hover h3 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .14em; }
+</style>

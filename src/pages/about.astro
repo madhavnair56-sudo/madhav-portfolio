@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="About — Madhav Manoharan" description="About Madhav Manoharan, content designer based in Dublin.">
+  <section class="container about-hero">
+    <p class="kicker">About</p>
+    <h1 class="display">I care about the whole communication system, not only the words on one screen.</h1>
+  </section>
+
+  <section class="section section-rule container about-grid">
+    <p class="kicker">Background</p>
+    <div class="prose">
+      <p>My background spans journalism, digital and product marketing, technical content, and product content design. That path taught me to look at the same product from several angles: what it does, how people experience it, how teams describe it, and how customers understand its value.</p>
+      <p>This page is intentionally a first-pass placeholder. We will write the final About story only after the selected case studies are settled, so the narrative is supported by the work rather than making claims ahead of it.</p>
+    </div>
+  </section>
+
+  <section class="section section-rule container principles">
+    <p class="kicker">How I work</p>
+    <div class="principle-grid">
+      <div><span>01</span><h2>Understand the product before polishing the sentence.</h2></div>
+      <div><span>02</span><h2>Make decisions visible, not just deliverables.</h2></div>
+      <div><span>03</span><h2>Treat UI, documentation, and product messaging as connected.</h2></div>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .about-hero { padding-top: 9rem; padding-bottom: 8rem; }
+  .about-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; }
+  .principles { display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; }
+  .principle-grid div { border-top: 1px solid var(--line); padding: 1.2rem 0 3rem; display: grid; grid-template-columns: 70px 1fr; gap: 1rem; }
+  .principle-grid span { color: var(--muted); font-size: .8rem; }
+  h2 { margin: 0; font-size: clamp(1.6rem, 3vw, 2.7rem); font-weight: 500; letter-spacing: -.035em; line-height: 1.05; }
+  @media (max-width: 760px) { .about-grid, .principles { grid-template-columns: 1fr; } }
+</style>

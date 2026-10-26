@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/paths';
+---
+<BaseLayout title="Page not found — Madhav Manoharan">
+  <section class="container missing">
+    <p class="kicker">404</p>
+    <h1 class="display">This page isn’t here.</h1>
+    <p class="lede"><a href={withBase('/')}>Back to the portfolio →</a></p>
+  </section>
+</BaseLayout>
+<style>.missing{padding-top:10rem;padding-bottom:12rem}</style>

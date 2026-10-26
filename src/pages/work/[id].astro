@@ -1,0 +1,78 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectMeta from '../../components/ProjectMeta.astro';
+import DecisionBlock from '../../components/DecisionBlock.astro';
+import { withBase } from '../../lib/paths';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('work');
+  const visible = entries.filter(item => import.meta.env.DEV || item.data.published);
+  return visible.map(project => ({ params: { id: project.id }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+const d = project.data;
+---
+<BaseLayout title={`${d.title} — Madhav Manoharan`} description={d.summary}>
+  <article>
+    <header class="container case-hero">
+      <a class="back" href={withBase('/work/')}>← Work</a>
+      <p class="kicker">{d.eyebrow}</p>
+      <h1>{d.title}</h1>
+      <p class="case-summary">{d.summary}</p>
+      <ProjectMeta role={d.role} period={d.period ?? String(d.year)} team={d.team} tags={d.tags} />
+    </header>
+
+    <div class="case-cover" style={`--case-accent:${d.accent}`}>
+      <div class="container"><span>{d.eyebrow}</span><span>{d.year}</span></div>
+    </div>
+
+    <section class="container case-body">
+      {d.confidentiality && (
+        <aside class="confidentiality" aria-label="Publication note">
+          <strong>Publication note</strong>
+          <p>{d.confidentiality}</p>
+        </aside>
+      )}
+      <div class="prose"><Content /></div>
+    </section>
+
+    {d.decisions.length > 0 && (
+      <section class="section section-rule container">
+        <div class="section-head">
+          <p class="kicker">Key decisions</p>
+          <h2>What changed, and why.</h2>
+        </div>
+        <div class="decision-list">
+          {d.decisions.map(decision => <DecisionBlock {...decision} />)}
+        </div>
+      </section>
+    )}
+
+    {d.outcomes.length > 0 && (
+      <section class="section section-rule container outcomes">
+        <p class="kicker">Outcome</p>
+        <ul>{d.outcomes.map(outcome => <li>{outcome}</li>)}</ul>
+      </section>
+    )}
+  </article>
+</BaseLayout>
+<style>
+  .case-hero { padding-top: 7rem; padding-bottom: 5rem; }
+  .back { display: inline-block; margin-bottom: 5rem; color: var(--muted); font-size: .9rem; }
+  h1 { max-width: 1080px; margin: 0; font-size: clamp(3rem, 7vw, 7rem); font-weight: 500; letter-spacing: -.055em; line-height: .94; }
+  .case-summary { max-width: 780px; margin: 2rem 0 0; color: var(--muted); font-size: clamp(1.15rem, 2vw, 1.45rem); }
+  .case-cover { background: var(--case-accent); min-height: 58vh; display: flex; align-items: flex-end; padding: 2rem 0; }
+  .case-cover .container { display: flex; justify-content: space-between; font-size: .78rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+  .case-body { padding-top: 6rem; padding-bottom: 7rem; }
+  .confidentiality { width: min(100%, var(--reading)); margin-bottom: 4rem; padding: 1rem 1.25rem; border: 1px solid var(--line); }
+  .confidentiality strong { font-size: .82rem; }
+  .confidentiality p { margin: .35rem 0 0; color: var(--muted); font-size: .9rem; }
+  .decision-list { max-width: 900px; margin-left: auto; }
+  .outcomes { display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; }
+  .outcomes ul { list-style: none; padding: 0; margin: 0; }
+  .outcomes li { border-top: 1px solid var(--line); padding: 1rem 0; font-size: clamp(1.15rem, 2vw, 1.5rem); }
+  @media (max-width: 760px) { .case-cover { min-height: 38vh; } .outcomes { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,62 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { siteConfig } from '../site.config';
+import { withBase } from '../lib/paths';
+
+const allWork = await getCollection('work');
+const visibleWork = allWork
+  .filter(item => import.meta.env.DEV || item.data.published)
+  .sort((a, b) => a.data.order - b.data.order);
+const featured = visibleWork.filter(item => item.data.featured).slice(0, 3);
+---
+<BaseLayout>
+  <section class="hero container">
+    <p class="kicker">Content designer · Dublin</p>
+    <h1 class="display">{siteConfig.hero}</h1>
+    <p class="lede">{siteConfig.intro}</p>
+  </section>
+
+  <section class="section section-rule container" aria-labelledby="selected-work">
+    <div class="section-head">
+      <p class="kicker">Selected work</p>
+      <h2 id="selected-work">A few problems worth showing.</h2>
+    </div>
+    <div class="work-grid">
+      {featured.map(item => (
+        <ProjectCard
+          id={item.id}
+          title={item.data.title}
+          eyebrow={item.data.eyebrow}
+          summary={item.data.summary}
+          tags={item.data.tags}
+          accent={item.data.accent}
+          draft={!item.data.published}
+        />
+      ))}
+    </div>
+    <a class="text-link" href={withBase('/work/')}>View all work →</a>
+  </section>
+
+  <section class="section section-rule container about-preview">
+    <p class="kicker">About</p>
+    <p class="about-line">My background spans journalism, product marketing, technical content, and content design. I use that range to understand the product, the user, and the story around both.</p>
+    <a class="text-link" href={withBase('/about/')}>More about me →</a>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero { padding-top: 9rem; padding-bottom: 8rem; min-height: 78vh; display: flex; flex-direction: column; justify-content: flex-end; }
+  .work-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem 2rem; }
+  .work-grid :global(.project-card:first-child) { grid-column: 1 / -1; }
+  .text-link { display: inline-block; margin-top: 3rem; font-size: .95rem; }
+  .about-preview { display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; align-items: start; }
+  .about-line { margin: 0; max-width: 850px; font-size: clamp(1.8rem, 4vw, 3.7rem); line-height: 1.06; letter-spacing: -.04em; }
+  .about-preview .text-link { grid-column: 2; }
+  @media (max-width: 760px) {
+    .hero { min-height: 70vh; padding-top: 6rem; padding-bottom: 5rem; }
+    .work-grid, .about-preview { grid-template-columns: 1fr; }
+    .work-grid :global(.project-card:first-child), .about-preview .text-link { grid-column: auto; }
+  }
+</style>

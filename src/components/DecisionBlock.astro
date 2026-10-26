@@ -1,0 +1,28 @@
+---
+interface Props {
+  label: string;
+  before?: string;
+  after?: string;
+  rationale: string;
+}
+const { label, before, after, rationale } = Astro.props;
+---
+<section class="decision">
+  <p class="kicker">{label}</p>
+  {(before || after) && (
+    <div class="change-grid">
+      {before && <div><span>Before</span><p>{before}</p></div>}
+      {after && <div><span>After</span><p>{after}</p></div>}
+    </div>
+  )}
+  <p class="reason">{rationale}</p>
+</section>
+<style>
+  .decision { padding: 1.5rem; background: var(--surface); margin-top: 1rem; }
+  .change-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .change-grid div { background: var(--bg); padding: 1rem; }
+  .change-grid span { color: var(--muted); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; }
+  .change-grid p { margin: .6rem 0 0; font-size: 1.2rem; }
+  .reason { max-width: 760px; margin: 1.25rem 0 0; color: #3b3a36; }
+  @media (max-width: 650px) { .change-grid { grid-template-columns: 1fr; } }
+</style>

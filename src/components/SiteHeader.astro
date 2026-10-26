@@ -1,0 +1,23 @@
+---
+import { siteConfig } from '../site.config';
+import { withBase } from '../lib/paths';
+const pathname = Astro.url.pathname;
+---
+<header class="site-header">
+  <div class="container nav-wrap">
+    <a class="brand" href={withBase('/')} aria-label={`${siteConfig.name}, home`}>{siteConfig.name}</a>
+    <nav aria-label="Primary navigation">
+      <a class:list={[{active: pathname.includes('/work')}]} href={withBase('/work/')}>Work</a>
+      <a class:list={[{active: pathname.includes('/about')}]} href={withBase('/about/')}>About</a>
+      {siteConfig.resumePath && <a href={siteConfig.resumePath}>Résumé</a>}
+    </nav>
+  </div>
+</header>
+<style>
+  .site-header { padding: 1.25rem 0; }
+  .nav-wrap { display: flex; justify-content: space-between; gap: 2rem; align-items: center; }
+  .brand { text-decoration: none; font-size: .95rem; font-weight: 600; letter-spacing: -.01em; }
+  nav { display: flex; gap: 1.4rem; }
+  nav a { text-decoration: none; color: var(--muted); font-size: .95rem; }
+  nav a:hover, nav a.active { color: var(--ink); }
+</style>

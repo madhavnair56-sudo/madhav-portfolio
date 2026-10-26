@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+
+const allWork = await getCollection('work');
+const work = allWork
+  .filter(item => import.meta.env.DEV || item.data.published)
+  .sort((a, b) => a.data.order - b.data.order);
+---
+<BaseLayout title="Work — Madhav Manoharan" description="Selected content design and product communication work by Madhav Manoharan.">
+  <section class="container work-intro">
+    <p class="kicker">Work</p>
+    <h1 class="display">Selected work across product, content, and communication.</h1>
+    <p class="lede">The public portfolio will stay curated. The private inventory can stay much larger.</p>
+  </section>
+
+  <section class="section section-rule container">
+    <div class="work-grid">
+      {work.map(item => (
+        <ProjectCard
+          id={item.id}
+          title={item.data.title}
+          eyebrow={item.data.eyebrow}
+          summary={item.data.summary}
+          tags={item.data.tags}
+          accent={item.data.accent}
+          draft={!item.data.published}
+        />
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .work-intro { padding-top: 9rem; padding-bottom: 6rem; }
+  .work-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem 2rem; }
+  @media (max-width: 760px) { .work-grid { grid-template-columns: 1fr; } }
+</style>
